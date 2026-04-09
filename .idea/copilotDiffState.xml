@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="/ApiKeyAuthenticationFilter (snapshot).java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="/ApiKeyAuthenticationFilter (snapshot).java" />
+              <option name="originalContent" value="package org.example.apigateway.filter;&#10;&#10;import org.example.apigateway.config.ApiKeyAuthenticationManager;&#10;import org.example.apigateway.config.ApiKeyAuthenticationToken;&#10;import org.springframework.http.HttpHeaders;&#10;import org.springframework.http.server.reactive.ServerHttpRequest;&#10;import org.springframework.security.authentication.AbstractAuthenticationToken;&#10;import org.springframework.security.core.Authentication;&#10;import org.springframework.security.web.server.authentication.AuthenticationWebFilter;&#10;import org.springframework.web.server.ServerWebExchange;&#10;import reactor.core.publisher.Mono;&#10;&#10;public class ApiKeyAuthenticationFilter extends AuthenticationWebFilter {&#10;&#10;    public ApiKeyAuthenticationFilter(ApiKeyAuthenticationManager manager) {&#10;        super(manager);&#10;&#10;        setServerAuthenticationConverter(exchange -&gt; {&#10;            ServerHttpRequest request = exchange.getRequest();&#10;            String apiKey = request.getHeaders().getFirst(&quot;x-api-key&quot;);&#10;&#10;            if (apiKey == null) {&#10;                return Mono.empty();&#10;            }&#10;&#10;            AbstractAuthenticationToken token = new ApiKeyAuthenticationToken(apiKey, &quot;UNKNOWN&quot;);&#10;            return Mono.just(token);&#10;        });&#10;    }&#10;}" />
+              <option name="updatedContent" value="package org.example.apigateway.filter;&#10;&#10;import org.example.apigateway.config.ApiKeyAuthenticationManager;&#10;import org.example.apigateway.config.ApiKeyAuthenticationToken;&#10;import org.springframework.http.HttpHeaders;&#10;import org.springframework.http.server.reactive.ServerHttpRequest;&#10;import org.springframework.security.authentication.AbstractAuthenticationToken;&#10;import org.springframework.security.core.Authentication;&#10;import org.springframework.security.web.server.authentication.AuthenticationWebFilter;&#10;import org.springframework.web.server.ServerWebExchange;&#10;import reactor.core.publisher.Mono;&#10;&#10;public class ApiKeyAuthenticationFilter extends AuthenticationWebFilter {&#10;&#10;    public ApiKeyAuthenticationFilter(ApiKeyAuthenticationManager manager) {&#10;        super(manager);&#10;&#10;        setServerAuthenticationConverter(exchange -&gt; {&#10;            ServerHttpRequest request = exchange.getRequest();&#10;            String apiKey = request.getHeaders().getFirst(&quot;x-api-key&quot;);&#10;&#10;            if (apiKey == null || apiKey.trim().isEmpty()) {&#10;                return Mono.empty();&#10;            }&#10;&#10;            // Kreiraj privremeni token sa API key-om kao credentials&#10;            // Manager će onda da proveri key i doda pravi role&#10;            AbstractAuthenticationToken token = new ApiKeyAuthenticationToken(apiKey, &quot;&quot;);&#10;            return Mono.just(token);&#10;        });&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="/ApiKeyAuthenticationToken (snapshot).java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="/ApiKeyAuthenticationToken (snapshot).java" />
+              <option name="originalContent" value="package org.example.apigateway.config;&#10;&#10;import org.springframework.security.authentication.AbstractAuthenticationToken;&#10;import java.util.Collections;&#10;&#10;public class ApiKeyAuthenticationToken extends AbstractAuthenticationToken {&#10;&#10;    private final String apiKey;&#10;    private final String role;&#10;&#10;    public ApiKeyAuthenticationToken(String apiKey, String role) {&#10;        super(Collections.singleton(() -&gt; role));&#10;        this.apiKey = apiKey;&#10;        this.role = role;&#10;        setAuthenticated(true);&#10;    }&#10;&#10;    @Override&#10;    public Object getCredentials() {&#10;        return apiKey;&#10;    }&#10;&#10;    @Override&#10;    public Object getPrincipal() {&#10;        return role;&#10;    }&#10;}" />
+              <option name="updatedContent" value="package org.example.apigateway.config;&#10;&#10;import org.springframework.security.authentication.AbstractAuthenticationToken;&#10;import org.springframework.security.core.authority.SimpleGrantedAuthority;&#10;import java.util.Collections;&#10;import java.util.List;&#10;&#10;public class ApiKeyAuthenticationToken extends AbstractAuthenticationToken {&#10;&#10;    private final String apiKey;&#10;    private final String role;&#10;&#10;    public ApiKeyAuthenticationToken(String apiKey, String role) {&#10;        super(role != null &amp;&amp; !role.isEmpty() &#10;            ? List.of(new SimpleGrantedAuthority(role)) &#10;            : Collections.emptyList());&#10;        this.apiKey = apiKey;&#10;        this.role = role;&#10;        setAuthenticated(!role.isEmpty());&#10;    }&#10;&#10;    @Override&#10;    public Object getCredentials() {&#10;        return apiKey;&#10;    }&#10;&#10;    @Override&#10;    public Object getPrincipal() {&#10;        return role;&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="/application (snapshot).properties">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="/application (snapshot).properties" />
+              <option name="originalContent" value="spring.application.name=api-gateway&#10;server.port=8765" />
+              <option name="updatedContent" value="spring.application.name=api-gateway&#10;server.port=8765&#10;&#10;eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka/&#10;eureka.client.register-with-eureka=true&#10;eureka.client.fetch-registry=true&#10;&#10;spring.cloud.gateway.discovery.locator.enabled=true&#10;spring.cloud.gateway.discovery.locator.lower-case-service-id=true" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
