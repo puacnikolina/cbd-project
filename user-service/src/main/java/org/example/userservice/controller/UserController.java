@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.example.userservice.dto.LoginRequest;
 import org.example.userservice.dto.RegisterRequest;
 import org.example.userservice.dto.UserResponse;
+import org.example.userservice.model.User;
 import org.example.userservice.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class UserController {
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(userService.registerUser(registerRequest));
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {

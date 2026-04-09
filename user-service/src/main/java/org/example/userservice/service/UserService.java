@@ -43,11 +43,12 @@ public class UserService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(2); // hardkod za test
+        Role role = roleRepo.findByName("USER").get();
+        user.setRole(role.getId());
 
         User savedUser = userRepo.save(user);
 
-        // Transform to DTO
+
         return new UserResponse(
                 savedUser.getId(),
                 savedUser.getUsername(),
