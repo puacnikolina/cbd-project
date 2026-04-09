@@ -1,10 +1,14 @@
 package org.example.userservice.service;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import org.example.userservice.dto.RegisterRequest;
 import org.example.userservice.dto.UserResponse;
+import org.example.userservice.exception.EmailAlreadyExistsException;
+import org.example.userservice.exception.InvalidCredentialsException;
+import org.example.userservice.exception.UserNotFoundException;
 import org.example.userservice.model.Role;
 import org.example.userservice.model.User;
 import org.example.userservice.repository.RoleRepository;
@@ -36,7 +40,7 @@ public class UserService {
     public UserResponse registerUser(RegisterRequest registerRequest){
         // Check if email already exists
         if(userRepo.existsByEmail(registerRequest.getEmail())){
-            throw new IllegalArgumentException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         User user = new User();
@@ -59,10 +63,10 @@ public class UserService {
 
     public UserResponse loginUser(String email, String password) {
         User user = userRepo.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials for email: " + email);
+            throw new InvalidCredentialsException("Invalid credentials for email: " + email);
         }
 
         return new UserResponse(
@@ -71,5 +75,18 @@ public class UserService {
                 user.getEmail(),
                 user.getRole()
         );
+    }
+
+    @Transactional
+    public void promoteToAdmin(Integer id) {
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+
+        Role adminRole = roleRepo.findByName("ADMIN")
+                .orElseThrow(() -> new RuntimeException("Admin role not found"));
+
+        user.setRole(adminRole.getId());
+        userRepo.save(user);
+
     }
 }

@@ -29,11 +29,17 @@ public class UserController {
         return ResponseEntity.ok(userService.registerUser(registerRequest));
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<UserResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword()));
     }
+
+    @PutMapping("/admin/{id}/promote")
+    public ResponseEntity<String> promoteUser(@PathVariable Integer id) {
+        userService.promoteToAdmin(id);
+        return ResponseEntity.ok("User promoted to admin successfully");
+    }
+
 
 
 
