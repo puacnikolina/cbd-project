@@ -8,6 +8,7 @@ public class UserResponse {
     private String username;
     private String email;
     private Integer role;
+    //dodati role name umesto role id
 
     public UserResponse(Integer id, String username, String email, Integer role) {
         this.id = id;

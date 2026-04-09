@@ -34,26 +34,20 @@ public class UserService {
     }
 
     public UserResponse registerUser(RegisterRequest registerRequest){
-        //username check
+        // Check if email already exists
         if(userRepo.existsByEmail(registerRequest.getEmail())){
-            throw new IllegalArgumentException("Email already exists: " + registerRequest.getEmail());
+            throw new IllegalArgumentException("Email already exists");
         }
 
-        //user for database
         User user = new User();
         user.setUsername(registerRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setEmail(registerRequest.getEmail());
-
-        Role userRole = roleRepo.findByName("USER")
-                .orElseThrow(() -> new IllegalArgumentException("Role 'USER' not found"));
-        int roleId = userRole.getId();
-        user.setRole(roleId);
-
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setRole(2); // hardkod za test
 
         User savedUser = userRepo.save(user);
 
-        //response for controller
+        // Transform to DTO
         return new UserResponse(
                 savedUser.getId(),
                 savedUser.getUsername(),
