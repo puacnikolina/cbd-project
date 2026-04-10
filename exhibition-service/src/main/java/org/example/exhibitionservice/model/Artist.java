@@ -27,6 +27,9 @@ public class Artist {
     @Column(name = "birth_year")
     private Integer birthYear;
 
+    @Column(name = "death_year")
+    private Integer deathYear;
+
     @Size(max = 100)
     @Column(name = "nationality", length = 100)
     private String nationality;

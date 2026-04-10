@@ -15,8 +15,6 @@ public class ApiGatewayConfig {
                         .uri("lb://user-service"))
                 .route("exhibition-service", r -> r.path("/exhibitions/**")
                         .uri("lb://exhibition-service"))
-//                .route("library-service", r -> r.path("/library/**")
-//                        .uri("lb://library-service"))
                 .build();
     }
 }

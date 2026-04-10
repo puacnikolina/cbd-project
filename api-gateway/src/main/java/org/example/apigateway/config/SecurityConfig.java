@@ -1,5 +1,6 @@
 package org.example.apigateway.config;
 
+import io.netty.handler.codec.http.HttpMethod;
 import org.example.apigateway.filter.ApiKeyAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +20,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .addFilterAt(authFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
+                        //Svi
                         .pathMatchers("/users/register", "/users/login").permitAll()
+                        //ADMIN
                         .pathMatchers("/users/admin/**", "/exhibitions/admin/**").hasRole("ADMIN")
+                        //PUBLIC routes
+                        .pathMatchers("/exhibitions", "/exhibitions/search/**").permitAll()
                         .pathMatchers("/users/**", "/exhibitions/**").hasAnyRole("USER", "ADMIN")
                         .anyExchange().denyAll()
                 )
