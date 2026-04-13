@@ -9,10 +9,10 @@ import java.time.LocalDate;
 
 @Data
 public class ExhibitionRequest {
-    @NotBlank()
+    @NotBlank
     @Size(max = 255)
     private String title;
-    @NotBlank()
+    @NotBlank
     @Size(max = 1000)
     private String description;
     @NotNull

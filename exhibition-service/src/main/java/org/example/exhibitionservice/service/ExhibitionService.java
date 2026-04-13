@@ -25,20 +25,20 @@ public class ExhibitionService {
         return exhibitionRepo.findAll();
     }
 
-    public Exhibition createExhibition(ExhibitionRequest exhibitionRequest) {
+    public Exhibition createExhibition(ExhibitionRequest request) {
         Exhibition exhibition = new Exhibition();
-        exhibition.setTitle(exhibitionRequest.getTitle());
-        exhibition.setDescription(exhibitionRequest.getDescription());
-        exhibition.setStartDate(exhibitionRequest.getStartDate());
-        exhibition.setEndDate(exhibitionRequest.getEndDate());
+        exhibition.setTitle(request.getTitle());
+        exhibition.setDescription(request.getDescription());
+        exhibition.setStartDate(request.getStartDate());
+        exhibition.setEndDate(request.getEndDate());
 
-        if (exhibitionRequest.getArtistId() != null) {
-            Artist artist = artistRepo.findById(exhibitionRequest.getArtistId())
-                    .orElseThrow(() -> new ArtistNotFoundException("Artist not found with id: " + exhibitionRequest.getArtistId()));
+        if (request.getArtistId() != null) {
+            Artist artist = artistRepo.findById(request.getArtistId())
+                    .orElseThrow(() -> new ArtistNotFoundException("Artist not found with id: " + request.getArtistId()));
             exhibition.setArtistId(artist.getId());
         }
 
-        exhibition.setIsActive(isActive(exhibitionRequest.getStartDate(), exhibitionRequest.getEndDate()));
+        exhibition.setIsActive(isActive(request.getStartDate(), request.getEndDate()));
 
         return exhibitionRepo.save(exhibition);
     }
@@ -57,26 +57,26 @@ public class ExhibitionService {
         exhibitionRepo.delete(exhibition);
     }
 
-    public Exhibition updateExhibition(Integer id, ExhibitionRequest exhibitionRequest) {
+    public Exhibition updateExhibition(Integer id, ExhibitionRequest request) {
 
         Exhibition updatedExhibition = exhibitionRepo.findById(id)
                 .orElseThrow(() -> new ExhibitionNotFoundException("Exhibition not found with id: " + id));
 
-        updatedExhibition.setTitle(exhibitionRequest.getTitle());
-        updatedExhibition.setDescription(exhibitionRequest.getDescription());
-        updatedExhibition.setStartDate(exhibitionRequest.getStartDate());
-        updatedExhibition.setEndDate(exhibitionRequest.getEndDate());
+        updatedExhibition.setTitle(request.getTitle());
+        updatedExhibition.setDescription(request.getDescription());
+        updatedExhibition.setStartDate(request.getStartDate());
+        updatedExhibition.setEndDate(request.getEndDate());
 
-        if (exhibitionRequest.getArtistId() != null) {
-            Artist artist = artistRepo.findById(exhibitionRequest.getArtistId())
-                    .orElseThrow(() -> new ArtistNotFoundException("Artist not found with id: " + exhibitionRequest.getArtistId()));
+        if (request.getArtistId() != null) {
+            Artist artist = artistRepo.findById(request.getArtistId())
+                    .orElseThrow(() -> new ArtistNotFoundException("Artist not found with id: " + request.getArtistId()));
             updatedExhibition.setArtistId(artist.getId());
         } else {
             updatedExhibition.setArtistId(null);
         }
 
         updatedExhibition.setIsActive(
-                isActive(exhibitionRequest.getStartDate(), exhibitionRequest.getEndDate())
+                isActive(request.getStartDate(), request.getEndDate())
         );
 
         return exhibitionRepo.save(updatedExhibition);

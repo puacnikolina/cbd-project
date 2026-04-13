@@ -24,8 +24,8 @@ public class ExhibitionController {
     }
 
     @PostMapping("/admin/create")
-    public ResponseEntity<Exhibition> createExhibition(@Valid @RequestBody ExhibitionRequest exhibitionRequest) {
-        Exhibition createdExhibition = exhibitionService.createExhibition(exhibitionRequest);
+    public ResponseEntity<Exhibition> createExhibition(@Valid @RequestBody ExhibitionRequest request) {
+        Exhibition createdExhibition = exhibitionService.createExhibition(request);
         return ResponseEntity.ok(createdExhibition);
     }
 
@@ -36,8 +36,8 @@ public class ExhibitionController {
     }
 
     @PutMapping("/admin/update/{id}")
-    public ResponseEntity<Exhibition> updateExhibition(@PathVariable Integer id,@Valid @RequestBody ExhibitionRequest exhibitionRequest) {
-        Exhibition updatedExhibition = exhibitionService.updateExhibition(id,exhibitionRequest);
+    public ResponseEntity<Exhibition> updateExhibition(@PathVariable Integer id,@Valid @RequestBody ExhibitionRequest request) {
+        Exhibition updatedExhibition = exhibitionService.updateExhibition(id, request);
         return ResponseEntity.ok(updatedExhibition);
     }
 
@@ -46,15 +46,13 @@ public class ExhibitionController {
         return exhibitionService.getActiveExhibitions();
     }
 
+    //pretraga izlozbe po reci koja se nalazi u naslovu
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam String keyword) {
-
         List<Exhibition> result = exhibitionService.searchByTitle(keyword);
 
         if (result.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("No exhibitions found for keyword: " + keyword);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No exhibitions found for keyword: " + keyword);
         }
 
         return ResponseEntity.ok(result);

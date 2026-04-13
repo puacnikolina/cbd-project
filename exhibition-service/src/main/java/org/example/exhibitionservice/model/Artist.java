@@ -34,7 +34,6 @@ public class Artist {
     @Column(name = "nationality", length = 100)
     private String nationality;
 
-
     @OneToMany
     @JoinColumn(name = "artist_id")
     private Set<Exhibition> exhibitions = new LinkedHashSet<>();
