@@ -12,9 +12,7 @@ public class ArtistRequest {
     @Size(max = 45)
     private String name;
     @NotNull
-    @Size(max = 45)
     private Integer birthYear;
-    @Size(max = 45)
     private Integer deathYear;
     @NotBlank
     @Size(max = 45)

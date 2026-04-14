@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.exhibitionservice.dto.ArtistRequest;
 import org.example.exhibitionservice.model.Artist;
+import org.example.exhibitionservice.model.Exhibition;
 import org.example.exhibitionservice.service.ArtistService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,4 +33,11 @@ public class ArtistController {
         artistService.deleteArtist(id);
         return ResponseEntity.ok("Artist deleted successfully");
     }
+
+    @GetMapping("/{id}/exhibitions")
+    public ResponseEntity<List<Exhibition>> getExhibitionsByArtist(@PathVariable Integer id) {
+        List<Exhibition> exhibitions = artistService.getExhibitionsByArtist(id);
+        return ResponseEntity.ok(exhibitions);
+    }
+
 }

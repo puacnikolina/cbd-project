@@ -48,13 +48,8 @@ public class ExhibitionController {
 
     //pretraga izlozbe po reci koja se nalazi u naslovu
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam String keyword) {
+    public ResponseEntity<List<Exhibition>> search(@RequestParam String keyword) {
         List<Exhibition> result = exhibitionService.searchByTitle(keyword);
-
-        if (result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No exhibitions found for keyword: " + keyword);
-        }
-
         return ResponseEntity.ok(result);
     }
 

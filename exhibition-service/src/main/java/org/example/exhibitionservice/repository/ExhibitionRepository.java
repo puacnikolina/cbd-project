@@ -8,4 +8,8 @@ import java.util.List;
 public interface ExhibitionRepository extends JpaRepository<Exhibition, Integer> {
     List<Exhibition> findByIsActiveTrue();
     List<Exhibition> findByTitleContainingIgnoreCase(String keyword);
+
+    void deleteByArtistId(Integer id);
+
+    List<Exhibition> findByArtistId(Integer id);
 }
