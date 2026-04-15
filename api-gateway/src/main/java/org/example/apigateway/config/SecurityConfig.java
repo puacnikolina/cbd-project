@@ -26,6 +26,7 @@ public class SecurityConfig {
                         .pathMatchers("/users/admin/**", "/exhibitions/admin/**").hasRole("ADMIN")
                         //PUBLIC routes
                         .pathMatchers("/exhibitions", "/exhibitions/search/**").permitAll()
+                        .pathMatchers("/artists/*/exhibitions").permitAll()
                         .pathMatchers("/users/**", "/exhibitions/**").hasAnyRole("USER", "ADMIN")
                         .anyExchange().denyAll()
                 )
