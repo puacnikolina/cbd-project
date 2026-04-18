@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="art_gallery@localhost" uuid="4065d4c6-6292-4688-ba54-5bd34e386f6e">
+    <data-source source="LOCAL" name="art_gallery@localhost" uuid="afb4f056-cbe7-489a-9c9f-fab04d1144ce">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/art_gallery</jdbc-url>
       <jdbc-additional-properties>

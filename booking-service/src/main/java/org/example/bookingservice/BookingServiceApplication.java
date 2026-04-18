@@ -1,16 +1,17 @@
-package org.example.exhibitionservice;
+package org.example.bookingservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class ExhibitionServiceApplication {
+@EnableFeignClients
+public class BookingServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ExhibitionServiceApplication.class, args);
+        SpringApplication.run(BookingServiceApplication.class, args);
     }
 
 }

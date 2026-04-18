@@ -17,7 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
-    public final UserService userService; //constructor injection
+    public final UserService userService;
+
+    @GetMapping("/{id}/exists")
+    public boolean userExists(@PathVariable Integer id) {
+        return userService.userExists(id);
+    }
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers(){

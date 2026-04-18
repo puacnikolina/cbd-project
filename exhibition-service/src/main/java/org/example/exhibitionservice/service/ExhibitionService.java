@@ -21,6 +21,11 @@ public class ExhibitionService {
     private final ExhibitionRepository exhibitionRepo;
     private final ArtistRepository artistRepo;
 
+    public Exhibition getExhibitionById(Integer id) {
+        return exhibitionRepo.findById(id)
+                .orElseThrow(() -> new ExhibitionNotFoundException("Exhibition not found with id: " + id));
+    }
+
     public List<Exhibition> getAllExhibitions() {
         return exhibitionRepo.findAll();
     }
@@ -90,4 +95,18 @@ public class ExhibitionService {
         return exhibitionRepo.findByTitleContainingIgnoreCase(keyword);
     }
 
+
+    public boolean isExhibitionAvailable(Integer id) {
+
+        return exhibitionRepo.findById(id)
+                .map(exhibition -> {
+                    LocalDate today = LocalDate.now();
+
+                    return (exhibition.getStartDate().isEqual(today)
+                            || exhibition.getStartDate().isBefore(today))
+                            && (exhibition.getEndDate().isEqual(today)
+                            || exhibition.getEndDate().isAfter(today));
+                })
+                .orElse(false);
+    }
 }

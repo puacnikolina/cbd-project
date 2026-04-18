@@ -18,6 +18,12 @@ public class ExhibitionController {
 
     private final ExhibitionService exhibitionService;
 
+
+    @GetMapping("/{id}/available")
+    public boolean isExhibitionAvailable(@PathVariable Integer id) {
+        return exhibitionService.isExhibitionAvailable(id);
+    }
+
     @GetMapping
     public List<Exhibition> getAllExhibitions() {
         return exhibitionService.getAllExhibitions();

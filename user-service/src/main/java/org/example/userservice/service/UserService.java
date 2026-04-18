@@ -38,7 +38,6 @@ public class UserService {
     }
 
     public UserResponse registerUser(RegisterRequest registerRequest){
-        // Check if email already exists
         if(userRepo.existsByEmail(registerRequest.getEmail())){
             throw new EmailAlreadyExistsException("Email already exists");
         }
@@ -88,5 +87,9 @@ public class UserService {
         user.setRole(adminRole.getId());
         userRepo.save(user);
 
+    }
+
+    public boolean userExists(Integer id) {
+        return userRepo.existsById(id);
     }
 }
