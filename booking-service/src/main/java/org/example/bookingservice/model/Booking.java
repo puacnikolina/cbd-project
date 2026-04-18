@@ -36,7 +36,7 @@ public class Booking {
     @NotNull
     @ColumnDefault("0.00")
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalPrice;
+    private Integer totalPrice;
 
 
 }

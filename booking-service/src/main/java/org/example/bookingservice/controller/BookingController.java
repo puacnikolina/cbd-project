@@ -1,13 +1,13 @@
 package org.example.bookingservice.controller;
 
 import lombok.AllArgsConstructor;
-import org.example.bookingservice.feign.ExhibitionServiceProxy;
-import org.example.bookingservice.feign.UserServiceProxy;
+import org.example.bookingservice.dto.CreateBookingRequest;
+import org.example.bookingservice.model.Booking;
 import org.example.bookingservice.service.BookingService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
@@ -15,22 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookingController {
 
     private final BookingService bookingService;
-    private final UserServiceProxy userService;
-    private final ExhibitionServiceProxy exhibitionService;
 
-    @GetMapping("/user/{id}")
-    public String testUser(@PathVariable Integer id) {
-
-        boolean exists = userService.userExists(id);
-
-        return "User exists: " + exists;
+    @PostMapping
+    public ResponseEntity<Booking> createBooking(@RequestBody CreateBookingRequest request) {
+        Booking booking = bookingService.createBooking(request);
+        return ResponseEntity.ok(booking);
     }
 
-    @GetMapping("/exhibition/{id}")
-    public String testExhibition(@PathVariable Integer id) {
-        boolean available = exhibitionService.isExhibitionAvailable(id);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Booking>> getBookingsByUser(@PathVariable Integer userId) {
+        return ResponseEntity.ok(bookingService.getBookingsByUser(userId));
+    }
 
-        return "Exhibition available: " + available;
+    @DeleteMapping("/{bookingId}/user/{userId}")
+    public ResponseEntity<String> cancelBooking(@PathVariable Integer bookingId, @PathVariable Integer userId) {
+        bookingService.cancelBooking(bookingId, userId);
+        return ResponseEntity.ok("Booking cancelled successfully");
     }
 
 }
