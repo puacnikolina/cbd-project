@@ -23,11 +23,10 @@ public class SecurityConfig {
                         //Svi
                         .pathMatchers("/users/register", "/users/login").permitAll()
                         //ADMIN
-                        .pathMatchers("/users/admin/**", "/exhibitions/admin/**").hasRole("ADMIN")
+                        .pathMatchers("/users/admin/**", "/exhibitions/admin/**","/artists/admin/**").hasRole("ADMIN")
                         //PUBLIC routes
-                        .pathMatchers("/exhibitions", "/exhibitions/search/**").permitAll()
-                        .pathMatchers("/artists/*/exhibitions").permitAll()
-                        .pathMatchers("/users/**", "/exhibitions/**").hasAnyRole("USER", "ADMIN")
+                        .pathMatchers("/exhibitions/**","/artists/**").permitAll()
+                        .pathMatchers("/bookings/**").hasAnyRole("USER", "ADMIN")
                         .anyExchange().denyAll()
                 )
                 .build();

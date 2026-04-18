@@ -24,7 +24,7 @@ public class UserController {
         return userService.userExists(id);
     }
 
-    @GetMapping
+    @GetMapping("/admin/all")
     public ResponseEntity<List<UserResponse>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }

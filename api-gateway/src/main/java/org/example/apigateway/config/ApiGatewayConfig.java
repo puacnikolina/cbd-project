@@ -13,8 +13,10 @@ public class ApiGatewayConfig {
 
                 .route("user-service", r -> r.path("/users/**")
                         .uri("lb://user-service"))
-                .route("exhibition-service", r -> r.path("/exhibitions/**")
+                .route("exhibition-service", r -> r.path("/exhibitions/**", "/artists/**")
                         .uri("lb://exhibition-service"))
+                .route("booking-service", r -> r.path("/bookings/**")
+                        .uri("lb://booking-service"))
                 .build();
     }
 }
