@@ -44,4 +44,11 @@ public class Exhibition {
     @Column(name = "artist_id")
     private Integer artistId;
 
+    @NotNull
+    @Column(name = "capacity")
+    private Integer capacity = 20;
+
+    @NotNull
+    @Column(name = "reserved_tickets")
+    private Integer reservedTickets = 0;
 }

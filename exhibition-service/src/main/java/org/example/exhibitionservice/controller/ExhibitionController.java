@@ -18,12 +18,6 @@ public class ExhibitionController {
 
     private final ExhibitionService exhibitionService;
 
-
-    @GetMapping("/{id}/available")
-    public boolean isExhibitionAvailable(@PathVariable Integer id) {
-        return exhibitionService.isExhibitionAvailable(id);
-    }
-
     @GetMapping
     public List<Exhibition> getAllExhibitions() {
         return exhibitionService.getAllExhibitions();
@@ -57,6 +51,21 @@ public class ExhibitionController {
     public ResponseEntity<List<Exhibition>> search(@RequestParam String keyword) {
         List<Exhibition> result = exhibitionService.searchByTitle(keyword);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}/available")
+    public boolean isExhibitionAvailable(@PathVariable Integer id) {
+        return exhibitionService.isExhibitionAvailable(id);
+    }
+
+    @PostMapping("/{id}/reserve")
+    public void reserve(@PathVariable Integer id, @RequestParam int quantity){
+        exhibitionService.reserve(id,quantity);
+    }
+
+    @PostMapping("/{id}/release")
+    public void release(@PathVariable Integer id, @RequestParam int quantity){
+        exhibitionService.release(id,quantity);
     }
 
 

@@ -36,6 +36,18 @@ public class BookingService {
             throw new RuntimeException("Exhibition not available");
         }
 
+        if (req.getTickets() == null || req.getTickets().isEmpty()) {
+            throw new RuntimeException("Tickets cannot be empty");
+        }
+
+        int totalQuantity = req.getTickets()
+                .stream()
+                .mapToInt(TicketRequest::getQuantity)
+                .sum();
+
+        exhibitionService.reserve(req.getExhibitionId(), totalQuantity);
+
+
         // 3. CREATE BOOKING (initial save)
         Booking booking = new Booking();
         booking.setUserId(req.getUserId());
@@ -92,8 +104,18 @@ public class BookingService {
             throw new RuntimeException("Booking already cancelled");
         }
 
-        booking.setStatus("CANCELLED");
+        List<Ticket> tickets = ticketRepo.findByBookingId(bookingId);
+        if (tickets.isEmpty()) {
+            throw new RuntimeException("No tickets found for booking");
+        }
+        int totalQuantity = tickets.stream()
+                .mapToInt(Ticket::getQuantity)
+                .sum();
 
+        Integer exhibitionId = tickets.get(0).getExhibitionId(); //svi imaju isti id pa uzmemo id iz prvog ticketa
+        exhibitionService.release(exhibitionId, totalQuantity);
+
+        booking.setStatus("CANCELLED");
         bookingRepo.save(booking);
 
     }

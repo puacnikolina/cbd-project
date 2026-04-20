@@ -1,6 +1,7 @@
 package org.example.exhibitionservice.service;
 
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.exhibitionservice.dto.ExhibitionRequest;
 import org.example.exhibitionservice.exception.ArtistNotFoundException;
@@ -36,6 +37,9 @@ public class ExhibitionService {
         exhibition.setDescription(request.getDescription());
         exhibition.setStartDate(request.getStartDate());
         exhibition.setEndDate(request.getEndDate());
+        exhibition.setIsActive(isActive(request.getStartDate(), request.getEndDate()));
+        exhibition.setReservedTickets(0);
+        exhibition.setCapacity(20);
 
         if (request.getArtistId() != null) {
             Artist artist = artistRepo.findById(request.getArtistId())
@@ -43,7 +47,7 @@ public class ExhibitionService {
             exhibition.setArtistId(artist.getId());
         }
 
-        exhibition.setIsActive(isActive(request.getStartDate(), request.getEndDate()));
+
 
         return exhibitionRepo.save(exhibition);
     }
@@ -71,6 +75,7 @@ public class ExhibitionService {
         updatedExhibition.setDescription(request.getDescription());
         updatedExhibition.setStartDate(request.getStartDate());
         updatedExhibition.setEndDate(request.getEndDate());
+        updatedExhibition.setIsActive(isActive(request.getStartDate(), request.getEndDate()));
 
         if (request.getArtistId() != null) {
             Artist artist = artistRepo.findById(request.getArtistId())
@@ -79,10 +84,6 @@ public class ExhibitionService {
         } else {
             updatedExhibition.setArtistId(null);
         }
-
-        updatedExhibition.setIsActive(
-                isActive(request.getStartDate(), request.getEndDate())
-        );
 
         return exhibitionRepo.save(updatedExhibition);
     }
@@ -108,5 +109,31 @@ public class ExhibitionService {
                             || exhibition.getEndDate().isAfter(today));
                 })
                 .orElse(false);
+    }
+
+    @Transactional
+    public void reserve(Integer id, int quantity) {
+        Exhibition exhibition = exhibitionRepo.findById(id)
+                .orElseThrow(() -> new ExhibitionNotFoundException("Exhibition not found with id: " + id));
+
+        if(exhibition.getReservedTickets() + quantity > exhibition.getCapacity()){
+            throw new RuntimeException("Not enough available tickets for this exhibition");
+        }
+
+        exhibition.setReservedTickets(exhibition.getReservedTickets() + quantity);
+    }
+
+    @Transactional
+    public void release(Integer id, int quantity) {
+        Exhibition exhibition = exhibitionRepo.findById(id)
+                .orElseThrow(() -> new ExhibitionNotFoundException("Exhibition not found with id: " + id));
+
+        int newReserved = exhibition.getReservedTickets() - quantity;
+
+        if (newReserved < 0) {
+            exhibition.setReservedTickets(0);
+        } else {
+            exhibition.setReservedTickets(newReserved);
+        }
     }
 }
