@@ -3,6 +3,7 @@ package org.example.bookingservice.service;
 import lombok.AllArgsConstructor;
 import org.example.bookingservice.dto.CreateBookingRequest;
 import org.example.bookingservice.dto.TicketRequest;
+import org.example.bookingservice.exception.BookingServiceException;
 import org.example.bookingservice.feign.ExhibitionServiceProxy;
 import org.example.bookingservice.feign.UserServiceProxy;
 import org.example.bookingservice.model.Booking;
@@ -11,6 +12,7 @@ import org.example.bookingservice.model.TicketCategory;
 import org.example.bookingservice.repository.BookingRepository;
 import org.example.bookingservice.repository.TicketCategoryRepository;
 import org.example.bookingservice.repository.TicketRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,15 +31,15 @@ public class BookingService {
 
     public Booking createBooking(CreateBookingRequest req) {
         if (!userService.userExists(req.getUserId())) {
-            throw new RuntimeException("User not found");
+            throw new BookingServiceException("User not found", HttpStatus.NOT_FOUND);
         }
 
         if (!exhibitionService.isExhibitionAvailable(req.getExhibitionId())) {
-            throw new RuntimeException("Exhibition not available");
+            throw new BookingServiceException("Exhibition not available", HttpStatus.BAD_REQUEST);
         }
 
         if (req.getTickets() == null || req.getTickets().isEmpty()) {
-            throw new RuntimeException("Tickets cannot be empty");
+            throw new BookingServiceException("Tickets cannot be empty", HttpStatus.BAD_REQUEST);
         }
 
         int totalQuantity = req.getTickets()
@@ -61,7 +63,7 @@ public class BookingService {
         Integer total = 0;
         for (TicketRequest t : req.getTickets()){
             TicketCategory category = categoryRepo.findById(t.getTicketCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Ticket category not found"));
+                    .orElseThrow(() -> new BookingServiceException("Ticket category not found", HttpStatus.NOT_FOUND));
 
             Integer price = category.getPrice().intValue() * t.getQuantity();
             total += price;
@@ -87,26 +89,26 @@ public class BookingService {
 
     public List<Booking> getBookingsByUser(Integer userId) {
         if (!userService.userExists(userId)) {
-            throw new RuntimeException("User not found");
+            throw new BookingServiceException("User not found", HttpStatus.NOT_FOUND);
         }
         return bookingRepo.findByUserId(userId);
     }
 
     public void cancelBooking(Integer bookingId, Integer userId) {
         Booking booking = bookingRepo.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new BookingServiceException("Booking not found", HttpStatus.NOT_FOUND));
 
         if (!booking.getUserId().equals(userId)) {
-            throw new RuntimeException("You cannot cancel this booking");
+            throw new BookingServiceException("You cannot cancel this booking",HttpStatus.FORBIDDEN);
         }
 
         if ("CANCELLED".equals(booking.getStatus())) {
-            throw new RuntimeException("Booking already cancelled");
+            throw new BookingServiceException("Booking already cancelled", HttpStatus.CONFLICT);
         }
 
         List<Ticket> tickets = ticketRepo.findByBookingId(bookingId);
         if (tickets.isEmpty()) {
-            throw new RuntimeException("No tickets found for booking");
+            throw new BookingServiceException("No tickets found for booking", HttpStatus.NOT_FOUND);
         }
         int totalQuantity = tickets.stream()
                 .mapToInt(Ticket::getQuantity)
