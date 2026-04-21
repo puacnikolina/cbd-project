@@ -20,11 +20,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .addFilterAt(authFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
-                        //Svi
                         .pathMatchers("/users/register", "/users/login").permitAll()
-                        //ADMIN
                         .pathMatchers("/users/admin/**", "/exhibitions/admin/**","/artists/admin/**").hasRole("ADMIN")
-                        //PUBLIC routes
                         .pathMatchers("/exhibitions/**","/artists/**").permitAll()
                         .pathMatchers("/bookings/**").hasAnyRole("USER", "ADMIN")
                         .anyExchange().denyAll()

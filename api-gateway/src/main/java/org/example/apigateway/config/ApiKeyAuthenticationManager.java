@@ -19,6 +19,6 @@ public class ApiKeyAuthenticationManager implements ReactiveAuthenticationManage
             return Mono.just(new ApiKeyAuthenticationToken(apiKey, "ROLE_USER"));
         }
 
-        return Mono.empty(); // authentication failed
+        return Mono.empty();
     }
 }

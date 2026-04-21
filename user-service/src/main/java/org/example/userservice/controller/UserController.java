@@ -1,6 +1,7 @@
 package org.example.userservice.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.example.userservice.dto.LoginRequest;
 import org.example.userservice.dto.RegisterRequest;
@@ -8,6 +9,7 @@ import org.example.userservice.dto.UserResponse;
 import org.example.userservice.model.User;
 import org.example.userservice.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@Validated
 public class UserController {
 
     public final UserService userService;
@@ -39,8 +42,8 @@ public class UserController {
         return ResponseEntity.ok(userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword()));
     }
 
-    @PutMapping("/admin/{id}/promote")
-    public ResponseEntity<String> promoteUser(@PathVariable Integer id) {
+    @PutMapping("/admin/promote/{id}")
+    public ResponseEntity<String> promoteUser(@Min(1)@PathVariable Integer id) {
         userService.promoteToAdmin(id);
         return ResponseEntity.ok("User promoted to admin successfully");
     }

@@ -13,5 +13,4 @@ public class LoginRequest {
     @Size(max = 255)
     String password;
 
-
 }

@@ -23,8 +23,6 @@ public class ApiKeyAuthenticationFilter extends AuthenticationWebFilter {
                 return Mono.empty();
             }
 
-            // Kreiraj privremeni token sa API key-om kao credentials
-            // Manager će onda da proveri key i doda pravi role
             AbstractAuthenticationToken token = new ApiKeyAuthenticationToken(apiKey, "");
             return Mono.just(token);
         });

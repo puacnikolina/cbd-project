@@ -22,11 +22,6 @@ public class ExhibitionService {
     private final ExhibitionRepository exhibitionRepo;
     private final ArtistRepository artistRepo;
 
-    public Exhibition getExhibitionById(Integer id) {
-        return exhibitionRepo.findById(id)
-                .orElseThrow(() -> new ExhibitionNotFoundException("Exhibition not found with id: " + id));
-    }
-
     public List<Exhibition> getAllExhibitions() {
         return exhibitionRepo.findAll();
     }
@@ -46,8 +41,6 @@ public class ExhibitionService {
                     .orElseThrow(() -> new ArtistNotFoundException("Artist not found with id: " + request.getArtistId()));
             exhibition.setArtistId(artist.getId());
         }
-
-
 
         return exhibitionRepo.save(exhibition);
     }

@@ -50,7 +50,6 @@ public class BookingService {
         exhibitionService.reserve(req.getExhibitionId(), totalQuantity);
 
 
-        // 3. CREATE BOOKING (initial save)
         Booking booking = new Booking();
         booking.setUserId(req.getUserId());
         booking.setStatus("CONFIRMED");
@@ -59,7 +58,6 @@ public class BookingService {
 
         Booking savedBooking = bookingRepo.save(booking);
 
-        // 4. PROCESS TICKETS
         Integer total = 0;
         for (TicketRequest t : req.getTickets()){
             TicketCategory category = categoryRepo.findById(t.getTicketCategoryId())
@@ -79,8 +77,6 @@ public class BookingService {
             ticketRepo.save(ticket);
         }
 
-
-        // 5. UPDATE TOTAL PRICE
         savedBooking.setTotalPrice(total);
 
         return bookingRepo.save(savedBooking);
@@ -114,7 +110,7 @@ public class BookingService {
                 .mapToInt(Ticket::getQuantity)
                 .sum();
 
-        Integer exhibitionId = tickets.get(0).getExhibitionId(); //svi imaju isti id pa uzmemo id iz prvog ticketa
+        Integer exhibitionId = tickets.get(0).getExhibitionId();
         exhibitionService.release(exhibitionId, totalQuantity);
 
         booking.setStatus("CANCELLED");

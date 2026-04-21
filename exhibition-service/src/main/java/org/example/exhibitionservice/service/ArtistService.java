@@ -25,7 +25,7 @@ public class ArtistService {
         return artistRepo.findAll();
     }
 
-    public ResponseEntity<Artist> createArtist(ArtistRequest request) {
+    public Artist createArtist(ArtistRequest request) {
         Artist artist = new Artist();
 
         artist.setName(request.getName());
@@ -34,7 +34,7 @@ public class ArtistService {
         artist.setNationality(request.getNationality());
 
         Artist savedArtist = artistRepo.save(artist);
-        return ResponseEntity.ok(savedArtist);
+        return savedArtist;
     }
 
     @Transactional

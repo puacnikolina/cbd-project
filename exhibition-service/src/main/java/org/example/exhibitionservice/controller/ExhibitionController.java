@@ -1,12 +1,14 @@
 package org.example.exhibitionservice.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.example.exhibitionservice.dto.ExhibitionRequest;
 import org.example.exhibitionservice.model.Exhibition;
 import org.example.exhibitionservice.service.ExhibitionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/exhibitions")
 @AllArgsConstructor
+@Validated
 public class ExhibitionController {
 
     private final ExhibitionService exhibitionService;
@@ -30,13 +33,13 @@ public class ExhibitionController {
     }
 
     @DeleteMapping("/admin/delete/{id}")
-    public ResponseEntity<String> deleteExhibition(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteExhibition(@Min(1) @PathVariable Integer id) {
         exhibitionService.deleteExhibition(id);
         return ResponseEntity.ok("Exhibition deleted successfully");
     }
 
     @PutMapping("/admin/update/{id}")
-    public ResponseEntity<Exhibition> updateExhibition(@PathVariable Integer id,@Valid @RequestBody ExhibitionRequest request) {
+    public ResponseEntity<Exhibition> updateExhibition(@Min(1) @PathVariable Integer id,@Valid @RequestBody ExhibitionRequest request) {
         Exhibition updatedExhibition = exhibitionService.updateExhibition(id, request);
         return ResponseEntity.ok(updatedExhibition);
     }
@@ -46,7 +49,7 @@ public class ExhibitionController {
         return exhibitionService.getActiveExhibitions();
     }
 
-    //pretraga izlozbe po reci koja se nalazi u naslovu
+
     @GetMapping("/search")
     public ResponseEntity<List<Exhibition>> search(@RequestParam String keyword) {
         List<Exhibition> result = exhibitionService.searchByTitle(keyword);
@@ -54,17 +57,17 @@ public class ExhibitionController {
     }
 
     @GetMapping("/{id}/available")
-    public boolean isExhibitionAvailable(@PathVariable Integer id) {
+    public boolean isExhibitionAvailable(@Min(1) @PathVariable Integer id) {
         return exhibitionService.isExhibitionAvailable(id);
     }
 
     @PostMapping("/{id}/reserve")
-    public void reserve(@PathVariable Integer id, @RequestParam int quantity){
+    public void reserve(@Min(1) @PathVariable Integer id, @RequestParam int quantity){
         exhibitionService.reserve(id,quantity);
     }
 
     @PostMapping("/{id}/release")
-    public void release(@PathVariable Integer id, @RequestParam int quantity){
+    public void release(@Min(1) @PathVariable Integer id, @RequestParam int quantity){
         exhibitionService.release(id,quantity);
     }
 
