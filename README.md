@@ -96,21 +96,26 @@ Make sure MySQL is running and properly configured in `application.yml`.
 Access the system via:
 http://localhost:8765
 
-## Database Model
+## EER Diagram
 The system follows a **database-per-service** pattern, where each microservice has its own dedicated database.  
 Each service manages its own data and is responsible for maintaining its consistency.  
 Communication between services is handled through API calls rather than direct database access, ensuring loose coupling and better scalability.
 
-<img width="1237" height="726" alt="er_model" src="https://github.com/user-attachments/assets/a7d7938b-b158-40ed-940e-898d8bcc996a" />
+<img width="981" height="547" alt="er_model" src="https://github.com/user-attachments/assets/b5a8cf20-22fa-482b-87c3-287eac986bc7" />
+
 
 ## Database Setup
 
-To set up the initial data in the database, add the following rows to the `role` table:
+To set up the initial data in the database, add the following rows to the `role` and `ticket_category` tables:
 
-- **Row 1**
-    - `id`: 1
-    - `name`: ADMIN
+INSERT INTO role (name) 
+VALUES 
+('ADMIN'), 
+('USER');
 
-- **Row 2**
-    - `id`: 2
-    - `name`: USER
+INSERT INTO ticket_category (category_name, price)
+VALUES 
+('Standard', 500.00),
+('VIP', 1200.00),
+('Student', 300.00);
+
