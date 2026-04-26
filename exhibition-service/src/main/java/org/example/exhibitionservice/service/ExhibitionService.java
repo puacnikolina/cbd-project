@@ -96,10 +96,8 @@ public class ExhibitionService {
                 .map(exhibition -> {
                     LocalDate today = LocalDate.now();
 
-                    return (exhibition.getStartDate().isEqual(today)
-                            || exhibition.getStartDate().isBefore(today))
-                            && (exhibition.getEndDate().isEqual(today)
-                            || exhibition.getEndDate().isAfter(today));
+                    return (exhibition.getStartDate().isEqual(today) || exhibition.getStartDate().isBefore(today))
+                            && (exhibition.getEndDate().isEqual(today) || exhibition.getEndDate().isAfter(today));
                 })
                 .orElse(false);
     }
