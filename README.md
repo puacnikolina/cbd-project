@@ -81,7 +81,7 @@ Any other endpoints not listed above will be denied with a `403 Forbidden` respo
 
 ---
 
-## ▶️ How to Run
+## How to Run
 
 1. Start Config Server
 2. Start Eureka Server
@@ -97,6 +97,10 @@ Access the system via:
 http://localhost:8765
 
 ## Database Model
+The system follows a **database-per-service** pattern, where each microservice has its own dedicated database.  
+Each service manages its own data and is responsible for maintaining its consistency.  
+Communication between services is handled through API calls rather than direct database access, ensuring loose coupling and better scalability.
+
 <img width="1237" height="726" alt="er_model" src="https://github.com/user-attachments/assets/a7d7938b-b158-40ed-940e-898d8bcc996a" />
 
 ## Database Setup
